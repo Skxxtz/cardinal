@@ -34,6 +34,24 @@
 
 
 
+
+/* Used to reduce the gap between title and emphasized text */
+.card h2 {
+    margin-bottom: 0px;
+}
+.card p:has(em) {
+    margin-top: 0px;
+}
+
+/* Ul and OL handling */
+.card ul, .card ol {
+    padding-inline-start: 20px;
+}
+
+/* Code block */
+.card .hljs {
+    background: none !important;
+}
 .card pre:has(code) {
     background: hsl(var(--code));
     padding: 5px;

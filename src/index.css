@@ -1,5 +1,5 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: system-ui, cantarell, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -15,7 +15,7 @@
   --error: 5, 78%, 69%;
   --warning: 50, 78%, 69%;
   --success: 100, 78%, 69%;
-  --code: 0,0%,0%;
+  --code: 0,0%,10%;
 }
 
 a {
