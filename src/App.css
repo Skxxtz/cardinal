@@ -58,6 +58,74 @@
     border-radius: 5px;
 }
 
+/* Base table styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 14px;
+  color: #333;
+  margin: 1em 0;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* Header row */
+thead tr {
+  background-color: #4f46e5; /* Indigo-600 */
+  color: white;
+  text-align: left;
+}
+
+/* Header cells */
+thead th {
+  padding: 12px 15px;
+  font-weight: 600;
+  user-select: none;
+}
+
+/* Body rows */
+tbody tr {
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  transition: background-color 0.25s ease;
+}
+
+/* Hover highlight */
+tbody tr:hover {
+  background-color: #f5f7ff;
+}
+
+/* Body cells */
+tbody td {
+  padding: 12px 15px;
+  vertical-align: middle;
+}
+
+/* Zebra striping */
+tbody tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+table {
+  border-collapse: collapse;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 14px;
+  color: #333;
+  margin: 1em 0;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+  /* Remove fixed width to allow shrink-wrap */
+  width: auto; /* or just omit this */
+  display: table; /* default, so no forced block */
+  max-width: 100%; /* optional to prevent overflow */
+}
+
+
+
+
 .error {
     background: hsl(var(--error));
     border: 1px solid hsl(var(--text));

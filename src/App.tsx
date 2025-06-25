@@ -26,7 +26,6 @@ function App() {
         async function fetchCards() {
             try {
                 const content: Card[] = await invoke("read_cards", {})
-                console.log(content)
                 setCards(content)
             } catch (e) {
                 setError(e as CardinalError)

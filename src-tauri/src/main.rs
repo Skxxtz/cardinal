@@ -115,7 +115,7 @@ impl Card {
         self.title.is_empty() && self.front.is_empty() && self.back.is_empty()
     }
     fn convert(&mut self){
-        let options = Options::empty();
+        let options = Options::all();
 
         let parser = Parser::new_ext(&self.front, options);
         let mut html_output = String::new();
