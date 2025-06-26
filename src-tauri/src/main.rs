@@ -44,6 +44,7 @@ fn get_cards(path: PathBuf)->Result<Vec<Card>, CardinalError>{
     let reader = BufReader::new(file);
 
     
+    #[derive(Debug)]
     enum Section {
         Title,
         Front,
@@ -59,6 +60,7 @@ fn get_cards(path: PathBuf)->Result<Vec<Card>, CardinalError>{
                 card.convert();
                 cards.push(card.clone());
                 card.clear();
+                current_section = Section::Title;
             }
 
             let trimmed = stripped.trim().to_string();
@@ -135,9 +137,7 @@ impl Card {
 enum CardinalErrorType {
     ArgumentError,
     ArgumentTypeMismatch,
-    FileExists(String),
     FileRead(String),
-    Other,
 }
 #[derive(Debug, Serialize)]
 struct CardinalError {
