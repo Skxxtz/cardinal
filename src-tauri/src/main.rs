@@ -79,18 +79,27 @@ fn get_cards(path: PathBuf)->Result<Vec<Card>, CardinalError>{
             }
 
         } else {
+            let res = if &line == "\n" {
+                "<br>"
+            } else {
+                &line
+            };
             match current_section {
                 Section::Front => {
-                    card.front.push_str(&line);
+                    card.front.push_str(res);
                     card.front.push('\n');
                 },
                 Section::Back => {
-                    card.back.push_str(&line);
+                    card.back.push_str(res);
                     card.back.push('\n');
                 },
                 _ => {}
             }
         }
+    }
+    if !card.is_empty(){
+        card.convert();
+        cards.push(card);
     }
 
     Ok(cards)

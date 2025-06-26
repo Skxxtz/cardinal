@@ -17,6 +17,15 @@
     padding-inline-start: 20px;
 }
 
+/* foot notes */
+.footnote-definition {
+    display: flex;
+}
+.footnote-definition p {
+    margin-block-start: 10px;
+    font-size: 80%;
+}
+
 /* Code block */
 .card .hljs {
     background: none !important;
@@ -74,7 +83,7 @@ tbody td {
 
 /* Zebra striping */
 tbody tr:nth-child(even) {
-  background-color: #f9fafb;
+  background-color: hsl(0,0%,90%);
 }
 
 table {
