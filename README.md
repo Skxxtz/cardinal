@@ -1,69 +1,38 @@
-# React + TypeScript + Vite
+# Cardinal
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Cardinal is an app designed to streamline the textbook to knowledge process. Oftentimes, flash card apps provide a UI where each card will be individually created and managed. With Cardinal we introduce a more efficient approach of defining cards. Cardinal uses markdown files to extract cards. A card has the following structure:
+# Cardinal
 
-Currently, two official plugins are available:
+Cardinal is an app designed to streamline the process of transforming textbooks
+into knowledge. Unlike typical flashcard apps that require you to create and
+manage each card individually through a UI, Cardinal offers a more efficient
+approach: defining cards directly within your markdown files.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. Card title: H1 `# Title`
+2. Front page: Content following the first H2 `## Some irrelevant string`
+3. Back page: Content following the second H2 `## Some irrelevant string`
 
-## Expanding the ESLint configuration
+This approach lets you use your favorite text editor—like Nvim—to create and
+edit cards in the most efficient and flexible way possible.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+> [!WARNING]
+> This project is still in the early stages of development
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Features
+- Strikethrough, Italics, Underline, and Bold 
+- Tables
+- Lists (ul, ol)
+- Code blocks
+- Definition lists
+- Footnotes
+- Horizonal Rules
+- GFM (GitHub Flavored Markdown features)
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## Example
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+<div align="center" style="text-align:center; border-radius:10px;">
+  <picture>
+    <img alt="example card" height="250" src="assets/showcase.png">
+  </picture>
+</div>
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
