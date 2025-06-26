@@ -61,7 +61,7 @@ Term
 : Footnote referenced [^1].
 
 ```rust
-def example(test: &str) -> Option<String> {
+fn example(test: &str) -> Option<String> {
     let result = "This is some rust code".to_string();
     Some(result)
 }
