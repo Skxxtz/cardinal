@@ -31,8 +31,8 @@ edit cards in the most efficient and flexible way possible.
 ## Example
 
 <div align="center" style="text-align:center; border-radius:10px;">
-  <picture>
-    <img alt="example card" height="250" src="assets/showcase.png">
-  </picture>
+    <picture>
+        <img alt="application screenshot" width="100%" style="border-radius: 10px;" src="assets/showcase.png">
+    </picture>
 </div>
 
