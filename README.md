@@ -1,9 +1,5 @@
 # Cardinal
 
-Cardinal is an app designed to streamline the textbook to knowledge process. Oftentimes, flash card apps provide a UI where each card will be individually created and managed. With Cardinal we introduce a more efficient approach of defining cards. Cardinal uses markdown files to extract cards. A card has the following structure:
-
-# Cardinal
-
 Cardinal is an app designed to streamline the process of transforming textbooks
 into knowledge. Unlike typical flashcard apps that require you to create and
 manage each card individually through a UI, Cardinal offers a more efficient
