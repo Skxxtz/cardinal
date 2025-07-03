@@ -9,15 +9,18 @@ pub struct Card {
     pub front: String,
     // The body of the second h2 element
     pub back: String,
+    // Easiness Factor
+    pub ef: f32,
 }
 impl Card {
     pub fn clear(&mut self) {
         self.title.clear();
         self.front.clear();
         self.back.clear();
+        self.ef = 0.0;
     }
     pub fn is_empty(&self) -> bool {
-        self.title.is_empty() && self.front.is_empty() && self.back.is_empty()
+        self.title.is_empty() || (self.front.is_empty() && self.back.is_empty())
     }
     pub fn convert(&mut self) {
         let options = Options::all();
