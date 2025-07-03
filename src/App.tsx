@@ -21,62 +21,52 @@ type Card = {
 
 class CardManager {
     private cards: Card[]
-    private currentIndex: number = 0
+    private correct: Card[]
+    private incorrect: Card[]
+    private currentCard: Card
 
     constructor(cards: Card[]) {
         this.cards = [...cards]
+        this.currentCard = this.currentCard = cards[0]
+        this.correct = []
+        this.incorrect = []
+    }
+
+    reset(){
+        if (this.cards.length != 0 || this.incorrect.length == 0){
+            this.cards.push(...this.correct)
+            this.correct = []
+        } 
+
+        this.cards.push(...this.incorrect)
+        this.incorrect = []
     }
 
     getCurrentCard(): Card {
-        return this.cards[this.currentIndex]
+        return this.currentCard
     }
 
-    moveNext() {
-        this.moveNextWeighted()
-        // this.currentIndex = (this.currentIndex + 1) % this.cards.length
-    }
+    moveNext(correct: boolean) {
+        // sort the cards based on correctness
+        const target = correct ? this.correct : this.incorrect;
+        target.push(this.currentCard)
 
-    moveNextWeighted() {
-        const weights = this.cards.map(card => {
-            // Invert EF so lower EF = higher weight
-            const weight = 3.0 - card.ef
-            return weight > 0.1 ? weight : 0.1 // clamp
-        })
-
-        const totalWeight = weights.reduce((a, b) => a + b, 0)
-        const rand = Math.random() * totalWeight
-
-        let sum = 0
-        for (let i = 0; i < weights.length; i++) {
-            sum += weights[i]
-            if (rand <= sum) {
-                this.currentIndex = i
-                return
-            }
+        // reset the cards
+        if (this.cards.length == 0) {
+            this.reset()
         }
 
-        // Fallback (shouldn't hit)
-        this.currentIndex = (this.currentIndex + 1) % this.cards.length
-    }
-
-    rateCard(rating: 1 | 2 | 3 | 4 | 5) {
-        const efDelta = [-0.3, -0.15, 0, 0.1, 0.2]
-        this.cards[this.currentIndex].ef += efDelta[rating - 1]
-        if (this.cards[this.currentIndex].ef < 1.3) {
-            this.cards[this.currentIndex].ef = 1.3
-        }
+        // get new random card from available cards
+        let index = Math.floor(Math.random() * this.cards.length)
+        this.currentCard = this.cards.splice(index, 1)[0]
     }
 
     getCards(): Card[] {
         return this.cards
     }
 
-    getCurrentIndex(): number {
-        return this.currentIndex
-    }
-
-    getTotalCards(): number {
-        return this.cards.length
+    getTotalCards(): [number, number, number] {
+        return [this.cards.length, this.correct.length, this.incorrect.length]
     }
 }
 
@@ -111,7 +101,7 @@ function App() {
                     if (showFront) {
                         setShowFront(false)
                     } else {
-                        manager.moveNext()
+                        manager.moveNext(true)
                         setShowFront(true)
                         forceRerender((n) => n + 1)
                     }
@@ -119,13 +109,16 @@ function App() {
                     if (showFront) {
                         setShowFront(false)
                     } else {
-                        manager.moveNext()
+                        manager.moveNext(true)
                         setShowFront(true)
                     }
                     forceRerender((n) => n + 1)
-                } else if (['1', '2', '3', '4', '5'].includes(event.key)) {
-                    const rating = parseInt(event.key) as 1 | 2 | 3 | 4 | 5
-                    manager.rateCard(rating)
+                } else if (event.key === 'ArrowLeft') {
+                    manager.moveNext(false)
+                    setShowFront(true)
+                    forceRerender((n) => n + 1)
+                } else if (event.key === 'r' && event.ctrlKey){
+                    manager.reset()
                     forceRerender((n) => n + 1)
                 }
         }
@@ -149,25 +142,23 @@ function App() {
     }
 
     const card = manager.getCurrentCard()
+    const [total, correct, incorrect] = manager.getTotalCards()
 
     return (
         <div className="card">
-        <div className="title-holder">
-        <h2>{card.title}</h2>
-        <div className="indicators">
-        <p>
-        card {manager.getCurrentIndex() + 1} of {manager.getTotalCards()}
-        </p>
-        <p>
-        EF: {manager.getCurrentCard().ef}
-        </p>
-        </div>
-        </div>
-        <div
-        dangerouslySetInnerHTML={{
-            __html: showFront ? card.front : card.back,
-        }}
-        />
+            <div className="title-holder">
+                <h2>{card.title}</h2>
+                <div className="indicators">
+                <p> {total} cards remaining </p>
+                <p className='correct'>{correct} correctly answered </p>
+                <p className='incorrect'>{incorrect} incorrectly answered </p>
+                </div>
+            </div>
+            <div
+            dangerouslySetInnerHTML={{
+                __html: showFront ? card.front : card.back,
+            }}
+            />
         </div>
     )
 }

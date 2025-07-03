@@ -5,20 +5,44 @@
 }
 
 /* Used to reduce the gap between title and emphasized text */
-.card .title-holder {
+.indicators {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    margin: 10px;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 10px;
 }
-.card .title-holder p {
+.indicators p {
+    margin: 0px;
     background: hsla(var(--text), 0.1);
     font-size: 80%;
     padding: 5px 8px;
     border-radius: 5px;
     border: 1px solid hsla(var(--text), 0.5);
 }
+.indicators .correct {
+    border: 1px solid hsla(var(--success));
+    background: hsla(var(--success), 0.2);
+}
+.indicators .incorrect {
+    border: 1px solid hsla(var(--error));
+    background: hsla(var(--error), 0.2);
+}
+
+.card .title-holder {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 .card p:has(em) {
     margin-top: 0px;
+}
+
+.card .icons {
+    display: flex;
+    gap: 10px;
 }
 
 /* Ul and OL handling */
