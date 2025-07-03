@@ -32,11 +32,31 @@ class CardManager {
     }
 
     moveNext() {
-        this.currentIndex = (this.currentIndex + 1) % this.cards.length
+        this.moveNextWeighted()
+        // this.currentIndex = (this.currentIndex + 1) % this.cards.length
     }
 
-    movePrevious() {
-        this.currentIndex = this.currentIndex === 0 ? this.cards.length - 1 : this.currentIndex - 1
+    moveNextWeighted() {
+        const weights = this.cards.map(card => {
+            // Invert EF so lower EF = higher weight
+            const weight = 3.0 - card.ef
+            return weight > 0.1 ? weight : 0.1 // clamp
+        })
+
+        const totalWeight = weights.reduce((a, b) => a + b, 0)
+        const rand = Math.random() * totalWeight
+
+        let sum = 0
+        for (let i = 0; i < weights.length; i++) {
+            sum += weights[i]
+            if (rand <= sum) {
+                this.currentIndex = i
+                return
+            }
+        }
+
+        // Fallback (shouldn't hit)
+        this.currentIndex = (this.currentIndex + 1) % this.cards.length
     }
 
     rateCard(rating: 1 | 2 | 3 | 4 | 5) {
@@ -95,12 +115,6 @@ function App() {
                         setShowFront(true)
                         forceRerender((n) => n + 1)
                     }
-                } else if (event.key === 'ArrowLeft') {
-                    if (showFront) {
-                        manager.movePrevious()
-                    }
-                    setShowFront(true)
-                    forceRerender((n) => n + 1)
                 } else if (event.key === 'ArrowRight') {
                     if (showFront) {
                         setShowFront(false)
@@ -112,7 +126,7 @@ function App() {
                 } else if (['1', '2', '3', '4', '5'].includes(event.key)) {
                     const rating = parseInt(event.key) as 1 | 2 | 3 | 4 | 5
                     manager.rateCard(rating)
-                    console.log(`Rated EF=${manager.getCurrentCard().ef.toFixed(2)}`)
+                    forceRerender((n) => n + 1)
                 }
         }
 
@@ -143,6 +157,9 @@ function App() {
         <div className="indicators">
         <p>
         card {manager.getCurrentIndex() + 1} of {manager.getTotalCards()}
+        </p>
+        <p>
+        EF: {manager.getCurrentCard().ef}
         </p>
         </div>
         </div>
