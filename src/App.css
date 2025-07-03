@@ -5,8 +5,17 @@
 }
 
 /* Used to reduce the gap between title and emphasized text */
-.card h2 {
-    margin-bottom: 0px;
+.card .title-holder {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.card .title-holder p {
+    background: hsla(var(--text), 0.1);
+    font-size: 80%;
+    padding: 5px 8px;
+    border-radius: 5px;
+    border: 1px solid hsla(var(--text), 0.5);
 }
 .card p:has(em) {
     margin-top: 0px;

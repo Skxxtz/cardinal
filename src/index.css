@@ -2,6 +2,8 @@
   font-family: Overpass;
   line-height: 1.5;
   font-weight: 400;
+  margin: 0;
+  padding: 0;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
@@ -17,6 +19,7 @@
   --warning: 50, 78%, 69%;
   --success: 100, 78%, 69%;
   --code: 0,0%,10%;
+  --text: 0,0%,90%;
 }
 
 a {

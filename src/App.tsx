@@ -95,7 +95,13 @@ function App() {
 
   return (
     <div className="card">
-      <h2>{card.title}</h2>
+    
+    <div className="title-holder">
+    <h2>{card.title}</h2>
+    <p>
+    card {currentIndex + 1} of {cards.length}
+    </p>
+    </div>
       <div
         dangerouslySetInnerHTML={{
           __html: showFront ? card.front : card.back,
