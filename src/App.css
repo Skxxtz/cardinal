@@ -17,6 +17,7 @@ html, body{
     flex-direction: column;
     gap: 10px;
     height: 100%;
+    align-items: center;
 }
 .footer {
     padding: 5px;
@@ -49,7 +50,7 @@ html, body{
     background: hsla(var(--secondary), 1);
     border: 5px solid hsla(var(--border), 1);
     border-radius: 10px;
-    width: min(800px, 100%);
+    width: min(800px, 100vw);
     min-height: min(400px, 40vh);
     color: hsla(var(--background), 1);
     padding: 20px;
@@ -69,6 +70,7 @@ html, body{
 /* Used to reduce the gap between title and emphasized text */
 .indicators {
     display: flex;
+    width: min(800px, 100%);
     gap: 10px;
 }
 .indicators p {
