@@ -7,7 +7,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: hsl(var(--background));
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -15,6 +15,9 @@
   -moz-osx-font-smoothing: grayscale;
   letter-spacing: normal;
 
+  --secondary: 0, 0%, 100%;
+  --border: 0, 0%, 67%;
+  --background: 216, 8%, 22%;
   --error: 5, 78%, 69%;
   --warning: 50, 78%, 69%;
   --success: 100, 78%, 69%;

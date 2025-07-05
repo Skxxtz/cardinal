@@ -122,6 +122,8 @@ function App() {
     const [error, setError] = useState<CardinalError | null>(null)
     const [manager, setManager] = useState<CardManager | null>(null)
     const [showFront, setShowFront] = useState(true)
+    const [leftPressed, setLeftPressed] = useState(false)
+    const [rightPressed, setRightPressed] = useState(false)
     const [, forceRerender] = useState(0) // to trigger re-renders
 
     useEffect(() => {
@@ -153,6 +155,7 @@ function App() {
                     forceRerender((n) => n + 1)
                 }
             } else if (event.key === 'ArrowRight') {
+                setRightPressed(true)
                 if (showFront) {
                     setShowFront(false)
                 } else {
@@ -161,6 +164,7 @@ function App() {
                 }
                 forceRerender((n) => n + 1)
             } else if (event.key === 'ArrowLeft') {
+                setLeftPressed(true)
                 manager.moveNext(false)
                 setShowFront(true)
                 forceRerender((n) => n + 1)
@@ -169,9 +173,17 @@ function App() {
                 forceRerender((n) => n + 1)
             }
         }
+        function handleKeyUp(event: KeyboardEvent) {
+            if (event.key == 'ArrowLeft') setLeftPressed(false);
+            if (event.key == 'ArrowRight') setRightPressed(false);
+        }
 
         window.addEventListener('keydown', handleKeyDown)
-        return () => window.removeEventListener('keydown', handleKeyDown)
+        window.addEventListener('keyup', handleKeyUp)
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown)
+            window.removeEventListener('keyup', handleKeyUp)
+        }
     }, [manager, showFront])
 
     if (error) {
@@ -192,38 +204,62 @@ function App() {
     const [total, correct, incorrect] = manager.getTotalCards()
     const isRefresh = manager.isRefresh()
     const color = manager.getTag(card.category)
-
     return (
-        <div className="card">
-            <div className="title-holder">
-                <h2>
-                    {card.title}
-                </h2>
-                <span
-                className="indicator"
-                style={{
-                    background: hsla(color, 0.1),
-                    border: `1px solid ${hsla(color, 0.5)}`,
-                    color: hsla(color, 0.8)
-                }}>{card.category}</span>
+        <div className="content">
+            <div className="header">
 
-                {isRefresh && (
-                    <span className="refresh-indicator indicator">Previously Incorrect</span>
-                )}
             </div>
-            <div className="indicators">
-                <p>{total} cards remaining</p>
-                <p className="correct">{correct} correctly answered</p>
-                <p className="incorrect">{incorrect} incorrectly answered</p>
+            <div className="card-holder">
+                <div className="card">
+                    <div className="title-holder">
+                        <h2>
+                        {card.title}
+                        </h2>
+                        <span
+                        className="indicator"
+                        style={{
+                            background: hsla(color, 0.1),
+                            border: `1px solid ${hsla(color, 0.5)}`,
+                            color: hsla(color, 0.8)
+                        }}>{card.category}</span>
+
+                        {isRefresh && (
+                            <span className="refresh-indicator indicator">Previously Incorrect</span>
+                        )}
+                    </div>
+                    <div
+                    className="card-body"
+                    dangerouslySetInnerHTML={{
+                        __html: showFront ? card.front : card.back,
+                    }}
+                    />
+                </div>
             </div>
-            <div
-                dangerouslySetInnerHTML={{
-                    __html: showFront ? card.front : card.back,
-                }}
-            />
+            <div className="footer">
+                <div className="indicators">
+                    <p className="correct">{correct} correctly answered</p>
+                    <p>{total + 1} cards remaining</p>
+                    <p className="incorrect">{incorrect} incorrectly answered</p>
+                </div>
+                <div className="keys">
+                    <div className="keys">
+                      <img
+                        src="key-left.svg"
+                        alt=""
+                        id="key-left"
+                        className={`key ${leftPressed ? "pressed" : ""}`}
+                      />
+                      <img
+                        src="key-right.svg"
+                        alt=""
+                        id="key-right"
+                        className={`key ${rightPressed ? "pressed" : ""}`}
+                      />
+                    </div>
+                </div>
+            </div>
         </div>
     )
-
 }
 
 function hsla([h, s, l]: [number, number, number], a: number): string {
