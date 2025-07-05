@@ -32,6 +32,9 @@ edit cards in the most efficient and flexible way possible.
     <picture>
         <img alt="application screenshot" width="100%" style="border-radius: 10px;" src="assets/showcase.png">
     </picture>
+    <picture>
+        <img alt="application screenshot" width="100%" style="border-radius: 10px;" src="assets/card.png">
+    </picture>
 </div>
 
 While the example is more complex than a typical flashcard, it can still be
