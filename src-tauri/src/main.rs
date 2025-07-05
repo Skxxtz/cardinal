@@ -7,10 +7,7 @@ mod utils;
 use card::Card;
 
 use std::{
-    env,
-    fs::File,
-    io::{BufRead, BufReader},
-    path::PathBuf,
+    collections::HashSet, env, fs::File, io::{BufRead, BufReader}, path::PathBuf
 };
 
 use crate::{
@@ -26,7 +23,7 @@ fn main() {
 }
 
 #[tauri::command]
-fn read_cards() -> Result<Vec<Card>, CardinalError> {
+fn read_cards() -> Result<(Vec<Card>, HashSet<String>), CardinalError> {
     // Parse first runtime argument of Cardinal
     let args: Vec<String> = env::args().collect();
     let location = args.get(1).ok_or_else(|| CardinalError {
@@ -43,16 +40,18 @@ fn read_cards() -> Result<Vec<Card>, CardinalError> {
         });
     }
 
+    let mut categories: HashSet<String> = HashSet::new();
+
     // Gather cards from within the file
-    if path.is_file() {
-        get_cards(path)
+    let cards = if path.is_file() {
+        get_cards(path, &mut categories)
     } else {
         if let Ok(dir) = path.read_dir() {
             Ok(dir
                 .filter_map(Result::ok)
                 .map(|s| s.path())
                 .filter(|s| s.is_file())
-                .filter_map(|f| get_cards(f).ok())
+                .filter_map(|f| get_cards(f, &mut categories).ok())
                 .flatten()
                 .collect::<Vec<Card>>())
         } else {
@@ -61,14 +60,37 @@ fn read_cards() -> Result<Vec<Card>, CardinalError> {
                 traceback: None,
             })
         }
-    }
+    }?;
+    Ok((cards, categories))
 }
 
-fn get_cards(path: PathBuf) -> Result<Vec<Card>, CardinalError> {
+fn get_cards(path: PathBuf, categories: &mut HashSet<String>) -> Result<Vec<Card>, CardinalError> {
     let file = File::open(&path).map_err(|e| CardinalError {
         error: CardinalErrorType::FileRead(path.display().to_string()),
         traceback: Some(e.to_string()),
     })?;
+
+    // Create category
+    let name = path
+    .file_stem()
+    .and_then(|s| s.to_str())
+    .ok_or(CardinalError {
+        error: CardinalErrorType::ArgumentError,
+        traceback: None,
+    })?
+    .replace(&['-', '_'][..], " ")
+    .split_whitespace()
+    .map(|word| {
+        let mut chars = word.chars();
+        match chars.next() {
+            None => String::new(),
+            Some(first) => first.to_uppercase().collect::<String>() + chars.as_str(),
+        }
+    })
+    .collect::<Vec<_>>()
+    .join(" ");
+    categories.insert(name.to_string());
+
     let reader = BufReader::new(file);
 
     #[derive(Debug)]
@@ -80,6 +102,8 @@ fn get_cards(path: PathBuf) -> Result<Vec<Card>, CardinalError> {
     let mut current_section: Section = Section::Title;
     let mut card = Card::default();
     let mut cards: Vec<Card> = Vec::new();
+
+    card.category = name;
 
     for line in reader.lines().filter_map(Result::ok) {
         if let Some(stripped) = line.strip_prefix("# ") {

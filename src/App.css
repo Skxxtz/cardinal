@@ -36,16 +36,18 @@
     align-items: center;
     gap: 10px;
 }
-.card .refresh-indicator {
+.card .indicator {
     margin: 0px;
-    background: hsla(var(--error), 0.1);
     font-size: 50%;
     font-weight: 400;
     padding: 2px 5px;
     border-radius: 5px;
+    margin-top: 3px;
+}
+.refresh-indicator {
+    background: hsla(var(--error), 0.1);
     border: 1px solid hsla(var(--error), 0.5);
     color: hsla(var(--error), 0.8);
-    margin-top: 2px;
 }
 .card p:has(em) {
     margin-top: 0px;

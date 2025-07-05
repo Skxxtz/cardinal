@@ -4,6 +4,22 @@ import hljs from 'highlight.js'
 import 'highlight.js/styles/github-dark.css'
 import './App.css'
 
+var tagColors: [number, number, number][] = [
+    [0, 70, 60],     // Soft red
+    [20, 80, 55],    // Coral
+    [40, 90, 55],    // Goldenrod
+    [60, 70, 60],    // Lemon yellow
+    [100, 50, 55],   // Olive green
+    [140, 60, 50],   // Mint green
+    [170, 65, 55],   // Aqua
+    [200, 70, 60],   // Sky blue
+    [220, 60, 65],   // Cornflower blue
+    [250, 60, 65],   // Lavender
+    [280, 65, 60],   // Orchid
+    [310, 70, 65],   // Rose
+    [330, 75, 60],   // Magenta
+];
+
 type CardinalError = {
     error?: {
         type?: string
@@ -16,28 +32,35 @@ type Card = {
     title: string
     front: string
     back: string
-    ef: number
+    category: string
 }
 
 class CardManager {
+    private tags: Map<string, [number, number, number]>
     private cards: Card[]
     private correct: Card[]
     private incorrect: Card[]
     private currentCard: Card
     private iteration: number = 1
 
-    constructor(cards: Card[]) {
+    constructor(cards: Card[], tags: Set<string>) {
+        let tagColorMap: Map<string, [number, number, number]> = new Map();
+        Array.from(tags).forEach((tag, i) => {
+            const color = tagColors[i % tagColors.length];
+            tagColorMap.set(tag, color);
+        });
         this.cards = [...cards]
+        this.tags = tagColorMap
         this.currentCard = this.currentCard = cards[0]
         this.correct = []
         this.incorrect = []
     }
 
-    reset(){
-        if (this.cards.length != 0 || this.incorrect.length == 0){
+    reset() {
+        if (this.cards.length != 0 || this.incorrect.length == 0) {
             this.cards.push(...this.correct)
             this.correct = []
-        } 
+        }
 
         this.cards.push(...this.incorrect)
         this.incorrect = []
@@ -75,7 +98,7 @@ class CardManager {
 
         // get new random card from available cards 
         let index = Math.floor(Math.random() * pool.length)
-        if (pool == this.incorrect){
+        if (pool == this.incorrect) {
             this.currentCard = pool[index]
         } else {
             this.currentCard = pool.splice(index, 1)[0]
@@ -89,6 +112,10 @@ class CardManager {
     getTotalCards(): [number, number, number] {
         return [this.cards.length, this.correct.length, this.incorrect.length]
     }
+
+    getTag(category: string): [number, number, number] {
+        return this.tags.get(category) ?? [0, 0, 0];
+    }
 }
 
 function App() {
@@ -100,8 +127,8 @@ function App() {
     useEffect(() => {
         async function fetchCards() {
             try {
-                const content: Card[] = await invoke('read_cards', {})
-                const cm = new CardManager(content)
+                const [cards, tags]: [Card[], Set<string>] = await invoke('read_cards', {})
+                const cm = new CardManager(cards, tags)
                 setManager(cm)
             } catch (e) {
                 setError(e as CardinalError)
@@ -117,30 +144,30 @@ function App() {
     useEffect(() => {
         function handleKeyDown(event: KeyboardEvent) {
             if (!manager) return
-                if (event.key === 'Enter') {
-                    if (showFront) {
-                        setShowFront(false)
-                    } else {
-                        manager.moveNext(true)
-                        setShowFront(true)
-                        forceRerender((n) => n + 1)
-                    }
-                } else if (event.key === 'ArrowRight') {
-                    if (showFront) {
-                        setShowFront(false)
-                    } else {
-                        manager.moveNext(true)
-                        setShowFront(true)
-                    }
-                    forceRerender((n) => n + 1)
-                } else if (event.key === 'ArrowLeft') {
-                    manager.moveNext(false)
+            if (event.key === 'Enter') {
+                if (showFront) {
+                    setShowFront(false)
+                } else {
+                    manager.moveNext(true)
                     setShowFront(true)
                     forceRerender((n) => n + 1)
-                } else if (event.key === 'r' && event.ctrlKey){
-                    manager.reset()
-                    forceRerender((n) => n + 1)
                 }
+            } else if (event.key === 'ArrowRight') {
+                if (showFront) {
+                    setShowFront(false)
+                } else {
+                    manager.moveNext(true)
+                    setShowFront(true)
+                }
+                forceRerender((n) => n + 1)
+            } else if (event.key === 'ArrowLeft') {
+                manager.moveNext(false)
+                setShowFront(true)
+                forceRerender((n) => n + 1)
+            } else if (event.key === 'r' && event.ctrlKey) {
+                manager.reset()
+                forceRerender((n) => n + 1)
+            }
         }
 
         window.addEventListener('keydown', handleKeyDown)
@@ -150,9 +177,9 @@ function App() {
     if (error) {
         return (
             <div className="error">
-            <p>Error: {error.error?.type}</p>
-            {error.error?.message && <p>{error.error?.message}</p>}
-            {error.traceback && <pre>{error.traceback}</pre>}
+                <p>Error: {error.error?.type}</p>
+                {error.error?.message && <p>{error.error?.message}</p>}
+                {error.traceback && <pre>{error.traceback}</pre>}
             </div>
         )
     }
@@ -164,6 +191,7 @@ function App() {
     const card = manager.getCurrentCard()
     const [total, correct, incorrect] = manager.getTotalCards()
     const isRefresh = manager.isRefresh()
+    const color = manager.getTag(card.category)
 
     return (
         <div className="card">
@@ -171,8 +199,16 @@ function App() {
                 <h2>
                     {card.title}
                 </h2>
+                <span
+                className="indicator"
+                style={{
+                    background: hsla(color, 0.1),
+                    border: `1px solid ${hsla(color, 0.5)}`,
+                    color: hsla(color, 0.8)
+                }}>{card.category}</span>
+
                 {isRefresh && (
-                    <span className="refresh-indicator">Previously Incorrect</span>
+                    <span className="refresh-indicator indicator">Previously Incorrect</span>
                 )}
             </div>
             <div className="indicators">
@@ -190,5 +226,8 @@ function App() {
 
 }
 
+function hsla([h, s, l]: [number, number, number], a: number): string {
+    return `hsla(${h}, ${s}%, ${l}%, ${a})`;
+}
 export default App
 
