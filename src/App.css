@@ -50,10 +50,10 @@ html, body{
     border: 5px solid hsla(var(--border), 1);
     border-radius: 10px;
     width: min(800px, 100%);
-    min-height: 400px;
+    min-height: min(400px, 40vh);
     color: hsla(var(--background), 1);
     padding: 20px;
-    max-height: 80vh;
+    max-height: 65vh;
     overflow-y: scroll;
 }
 .title-holder {
@@ -149,7 +149,7 @@ table {
 
 /* Header row */
 thead tr {
-  background-color: #4f46e5; /* Indigo-600 */
+  background-color: hsl(var(--table-head)); /* Indigo-600 */
   color: white;
   text-align: left;
 }
@@ -190,7 +190,7 @@ table {
   font-size: 14px;
   color: #333;
   margin: 1em 0;
-  box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.2);
   border-radius: 6px;
   overflow: hidden;
   /* Remove fixed width to allow shrink-wrap */
@@ -203,6 +203,9 @@ code {
     border-radius: 4px;
     background: #191919;
     color: #C2CAD2;
+}
+dd {
+    margin-inline-start: 20px;
 }
 
 
