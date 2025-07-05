@@ -34,7 +34,18 @@
 .card .title-holder {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 10px;
+}
+.card .refresh-indicator {
+    margin: 0px;
+    background: hsla(var(--error), 0.1);
+    font-size: 50%;
+    font-weight: 400;
+    padding: 2px 5px;
+    border-radius: 5px;
+    border: 1px solid hsla(var(--error), 0.5);
+    color: hsla(var(--error), 0.8);
+    margin-top: 2px;
 }
 .card p:has(em) {
     margin-top: 0px;

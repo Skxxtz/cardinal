@@ -24,6 +24,7 @@ class CardManager {
     private correct: Card[]
     private incorrect: Card[]
     private currentCard: Card
+    private iteration: number = 1
 
     constructor(cards: Card[]) {
         this.cards = [...cards]
@@ -40,25 +41,45 @@ class CardManager {
 
         this.cards.push(...this.incorrect)
         this.incorrect = []
+        this.iteration = 1
     }
 
     getCurrentCard(): Card {
         return this.currentCard
     }
 
+    isRefresh(): boolean {
+        const n = 6;
+        return (this.cards.length > n && this.incorrect.length > 0 && this.iteration % n == 0)
+    }
+
     moveNext(correct: boolean) {
-        // sort the cards based on correctness
-        const target = correct ? this.correct : this.incorrect;
-        target.push(this.currentCard)
+        const n = 6;
+        const wasFailedCard = this.isRefresh()
+
+        this.iteration = (correct || wasFailedCard) ? this.iteration + 1 : this.iteration
+
+        const condition = (this.cards.length > n && this.incorrect.length > 0 && this.iteration % n == 0)
+        const pool = condition ? this.incorrect : this.cards
+
+        if (!wasFailedCard) {
+            // sort the cards based on correctness
+            const target = correct ? this.correct : this.incorrect;
+            target.push(this.currentCard)
+        }
 
         // reset the cards
         if (this.cards.length == 0) {
             this.reset()
         }
 
-        // get new random card from available cards
-        let index = Math.floor(Math.random() * this.cards.length)
-        this.currentCard = this.cards.splice(index, 1)[0]
+        // get new random card from available cards 
+        let index = Math.floor(Math.random() * pool.length)
+        if (pool == this.incorrect){
+            this.currentCard = pool[index]
+        } else {
+            this.currentCard = pool.splice(index, 1)[0]
+        }
     }
 
     getCards(): Card[] {
@@ -96,7 +117,6 @@ function App() {
     useEffect(() => {
         function handleKeyDown(event: KeyboardEvent) {
             if (!manager) return
-
                 if (event.key === 'Enter') {
                     if (showFront) {
                         setShowFront(false)
@@ -143,24 +163,31 @@ function App() {
 
     const card = manager.getCurrentCard()
     const [total, correct, incorrect] = manager.getTotalCards()
+    const isRefresh = manager.isRefresh()
 
     return (
         <div className="card">
             <div className="title-holder">
-                <h2>{card.title}</h2>
-                <div className="indicators">
-                <p> {total} cards remaining </p>
-                <p className='correct'>{correct} correctly answered </p>
-                <p className='incorrect'>{incorrect} incorrectly answered </p>
-                </div>
+                <h2>
+                    {card.title}
+                </h2>
+                {isRefresh && (
+                    <span className="refresh-indicator">Previously Incorrect</span>
+                )}
+            </div>
+            <div className="indicators">
+                <p>{total} cards remaining</p>
+                <p className="correct">{correct} correctly answered</p>
+                <p className="incorrect">{incorrect} incorrectly answered</p>
             </div>
             <div
-            dangerouslySetInnerHTML={{
-                __html: showFront ? card.front : card.back,
-            }}
+                dangerouslySetInnerHTML={{
+                    __html: showFront ? card.front : card.back,
+                }}
             />
         </div>
     )
+
 }
 
 export default App
