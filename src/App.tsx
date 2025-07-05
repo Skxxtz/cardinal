@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { invoke } from '@tauri-apps/api/core'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github-dark.css'
@@ -122,8 +122,8 @@ function App() {
     const [error, setError] = useState<CardinalError | null>(null)
     const [manager, setManager] = useState<CardManager | null>(null)
     const [showFront, setShowFront] = useState(true)
-    const [leftPressed, setLeftPressed] = useState(false)
-    const [rightPressed, setRightPressed] = useState(false)
+    const leftPressed = useRef(false)
+    const rightPressed = useRef(false)
     const [, forceRerender] = useState(0) // to trigger re-renders
 
     useEffect(() => {
@@ -139,9 +139,10 @@ function App() {
         fetchCards()
     }, [])
 
+
     useEffect(() => {
         hljs.highlightAll()
-    }, [manager, showFront])
+    }, [showFront, manager?.getCurrentCard()])
 
     useEffect(() => {
         function handleKeyDown(event: KeyboardEvent) {
@@ -155,7 +156,7 @@ function App() {
                     forceRerender((n) => n + 1)
                 }
             } else if (event.key === 'ArrowRight') {
-                setRightPressed(true)
+                rightPressed.current = true
                 if (showFront) {
                     setShowFront(false)
                 } else {
@@ -164,7 +165,7 @@ function App() {
                 }
                 forceRerender((n) => n + 1)
             } else if (event.key === 'ArrowLeft') {
-                setLeftPressed(true)
+                leftPressed.current = true
                 manager.moveNext(false)
                 setShowFront(true)
                 forceRerender((n) => n + 1)
@@ -174,8 +175,8 @@ function App() {
             }
         }
         function handleKeyUp(event: KeyboardEvent) {
-            if (event.key == 'ArrowLeft') setLeftPressed(false);
-            if (event.key == 'ArrowRight') setRightPressed(false);
+            if (event.key == 'ArrowLeft') leftPressed.current = false;
+            if (event.key == 'ArrowRight') rightPressed.current = false;
         }
 
         window.addEventListener('keydown', handleKeyDown)
