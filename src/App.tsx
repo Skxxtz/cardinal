@@ -5,19 +5,29 @@ import 'highlight.js/styles/github-dark.css'
 import './App.css'
 
 var tagColors: [number, number, number][] = [
-    [0, 70, 60],     // Soft red
-    [20, 80, 55],    // Coral
-    [40, 90, 55],    // Goldenrod
-    [60, 70, 60],    // Lemon yellow
-    [100, 50, 55],   // Olive green
-    [140, 60, 50],   // Mint green
-    [170, 65, 55],   // Aqua
-    [200, 70, 60],   // Sky blue
-    [220, 60, 65],   // Cornflower blue
-    [250, 60, 65],   // Lavender
-    [280, 65, 60],   // Orchid
-    [310, 70, 65],   // Rose
-    [330, 75, 60],   // Magenta
+    [0, 85, 50],     // Deep red
+    [20, 85, 50],    // Strong coral
+    [40, 90, 50],    // Rich goldenrod
+    [100, 75, 50],   // Olive green
+    [140, 80, 50],   // Mint green
+    [170, 85, 50],   // Aqua
+    [200, 85, 50],   // Sky blue
+    [220, 80, 50],   // Cornflower blue
+    [250, 80, 50],   // Lavender
+    [280, 85, 50],   // Orchid
+    [310, 85, 50],   // Rose
+    [330, 90, 50],   // Magenta
+    [10, 90, 50],    // Tomato red
+    [30, 90, 50],    // Dark orange
+    [80, 85, 50],    // Medium lime green
+    [110, 85, 50],   // Bright green
+    [150, 90, 50],   // Teal
+    [180, 90, 50],   // Cyan
+    [210, 90, 50],   // Bright blue
+    [240, 90, 50],   // Royal blue
+    [270, 85, 50],   // Deep purple
+    [300, 85, 50],   // Deep pink
+    [340, 90, 50],   // Crimson
 ];
 
 type CardinalError = {

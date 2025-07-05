@@ -198,7 +198,12 @@ table {
   display: table; /* default, so no forced block */
   max-width: 100%; /* optional to prevent overflow */
 }
-
+code {
+    padding: 2px 5px;
+    border-radius: 4px;
+    background: #191919;
+    color: #C2CAD2;
+}
 
 
 
