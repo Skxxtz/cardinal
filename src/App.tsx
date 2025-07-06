@@ -1,7 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
 import { invoke } from '@tauri-apps/api/core'
 import hljs from 'highlight.js'
+import katex from 'katex'
+
 import 'highlight.js/styles/github-dark.css'
+import 'katex/dist/katex.min.css'
+
 import './App.css'
 
 var tagColors: [number, number, number][] = [
@@ -152,6 +156,18 @@ function App() {
 
     useEffect(() => {
         hljs.highlightAll()
+        const elements = document.querySelectorAll('.math.math-display')
+        elements.forEach((el) => {
+            const expression = el.textContent || ''
+            try {
+                el.innerHTML = katex.renderToString(expression, {
+                    displayMode: true,
+                    throwOnError: false,
+                })
+            } catch (e) {
+                console.error('Failed to render math:', expression, e)
+            }
+        })
     }, [showFront, manager?.getCurrentCard()])
 
     useEffect(() => {

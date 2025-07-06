@@ -206,11 +206,16 @@ code {
     background: #191919;
     color: #C2CAD2;
 }
+
+/* definitions */
 dd {
     margin-inline-start: 20px;
 }
 
-
+/* math */
+.math.math-display span{
+    text-align: start;
+}
 
 .error {
     background: hsl(var(--error));
