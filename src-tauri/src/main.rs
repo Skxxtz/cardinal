@@ -5,22 +5,57 @@ mod card;
 mod error;
 mod utils;
 use card::Card;
+use tauri::WebviewWindow;
 
 use std::{
     collections::HashSet, env, fs::File, io::{BufRead, BufReader}, path::PathBuf
 };
+use tauri::Manager;
 
 use crate::{
     error::{CardinalError, CardinalErrorType},
     utils::expand_tilde,
 };
 
+fn get_window(app: &tauri::App) -> WebviewWindow {
+    match app.get_webview_window("main"){
+        Some(win) => win,
+        _ => {
+            tauri::WebviewWindowBuilder::new(
+                app,
+                "main",
+                tauri::WebviewUrl::App("index.html".into()),
+            )
+                .title("Cardinal")
+                .build()
+                .unwrap()
+        }
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn create_main_window(app: &tauri::App) {
+    let window = get_window(app);
+    let _ = window.set_decorations(true);
+}
+
+#[cfg(not(target_os = "windows"))]
+fn create_main_window(app: &tauri::App) {
+    let window = get_window(app);
+    let _ = window.set_decorations(false);
+}
+
 fn main() {
     tauri::Builder::default()
+        .setup(|app| {
+            create_main_window(app);
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![read_cards])
         .run(tauri::generate_context!())
-        .expect("Error running tauri backend");
+        .expect("error while running tauri application");
 }
+
 
 #[tauri::command]
 fn read_cards() -> Result<(Vec<Card>, HashSet<String>), CardinalError> {
