@@ -22,6 +22,7 @@ pub fn get_home_dir() -> Option<PathBuf> {
     }
     #[cfg(windows)]
     {
+        use std::env;
         env::var("USERPROFILE").ok().map(PathBuf::from)
     }
 }
