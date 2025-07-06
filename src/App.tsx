@@ -274,13 +274,13 @@ function App() {
                             src="key-left.svg"
                             alt=""
                             id="key-left"
-                            className={`key ${leftPressed ? "pressed" : ""}`}
+                            className={`key ${leftPressed.current ? "pressed" : ""}`}
                         />
                         <img
                             src="key-right.svg"
                             alt=""
                             id="key-right"
-                            className={`key ${rightPressed ? "pressed" : ""}`}
+                            className={`key ${rightPressed.current ? "pressed" : ""}`}
                         />
                     </div>
                 </div>
