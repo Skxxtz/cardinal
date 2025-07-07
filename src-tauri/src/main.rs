@@ -43,6 +43,9 @@ fn create_main_window(app: &tauri::App) {
 fn create_main_window(app: &tauri::App) {
     let window = get_window(app);
     let _ = window.set_decorations(false);
+    // Possibly later use with gtk-layer-shell
+    // if let Ok(window) = window.gtk_window(){
+    // }
 }
 
 fn main() {

@@ -236,31 +236,29 @@ function App() {
             <div className="header">
 
             </div>
-            <div className="card-holder">
-                <div className="card">
-                    <div className="title-holder">
-                        <h2>
-                            {card.title}
-                        </h2>
-                        <span
-                            className="indicator"
-                            style={{
-                                background: hsla(color, 0.1),
-                                border: `1px solid ${hsla(color, 0.5)}`,
-                                color: hsla(color, 0.8)
-                            }}>{card.category}</span>
+            <div className="card">
+                <div className="title-holder">
+                    <h2>
+                        {card.title}
+                    </h2>
+                    <span
+                        className="indicator"
+                        style={{
+                            background: hsla(color, 0.1),
+                            border: `1px solid ${hsla(color, 0.5)}`,
+                            color: hsla(color, 0.8)
+                        }}>{card.category}</span>
 
-                        {isRefresh && (
-                            <span className="refresh-indicator indicator">Previously Incorrect</span>
-                        )}
-                    </div>
-                    <div
-                        className="card-body"
-                        dangerouslySetInnerHTML={{
-                            __html: showFront ? card.front : card.back,
-                        }}
-                    />
+                    {isRefresh && (
+                        <span className="refresh-indicator indicator">Previously Incorrect</span>
+                    )}
                 </div>
+                <div
+                    className="card-body"
+                    dangerouslySetInnerHTML={{
+                        __html: showFront ? card.front : card.back,
+                    }}
+                />
             </div>
             <div className="footer">
                 <div className="indicators">
