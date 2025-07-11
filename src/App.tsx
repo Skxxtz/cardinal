@@ -262,9 +262,9 @@ function App() {
             </div>
             <div className="footer">
                 <div className="indicators">
-                    <p className="correct">{correct} correctly answered</p>
-                    <p>{total + 1} cards remaining</p>
                     <p className="incorrect">{incorrect} incorrectly answered</p>
+                    <p>{total + 1} cards remaining</p>
+                    <p className="correct">{correct} correctly answered</p>
                 </div>
                 <div className="keys">
                     <div className="keys">
